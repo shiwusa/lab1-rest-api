@@ -16,3 +16,7 @@ def create_category():
     categories.append(new_category)
     return jsonify(categories)
 
+
+@app.route("/getCategories")
+def get_categories():
+    return jsonify(categories)
