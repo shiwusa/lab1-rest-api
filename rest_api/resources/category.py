@@ -11,9 +11,11 @@ categories = []
 
 @blp.route("/category")
 class CategoryList(MethodView):
+    @blp.response(200, CategorySchema(many=True))
     def get(self):
         return categories
 
+    @blp.response(200, CategorySchema)
     @blp.arguments(CategorySchema)
     def post(self, request_title):
         try:
@@ -25,6 +27,6 @@ class CategoryList(MethodView):
                 "title": request_title["title"]
             }
             categories.append(new_category)
-            return categories
+            return new_category
         except KeyError:
             abort(404, "Cannot create category")

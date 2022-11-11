@@ -11,10 +11,12 @@ users = []
 
 @blp.route("/user")
 class UserList(MethodView):
+    @blp.response(200, UserSchema(many=True))
     def get(self):
         return users
 
     @blp.arguments(UserSchema)
+    @blp.response(200, UserSchema(many=True))
     def post(self, user_request):
         try:
             if any(u["name"] == user_request["name"] for u in users):

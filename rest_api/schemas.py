@@ -18,3 +18,4 @@ class RecordSchema(Schema):
     title = fields.Str(required=True)
     amount = fields.Float(required=True)
 
+

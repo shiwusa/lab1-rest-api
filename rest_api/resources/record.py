@@ -15,6 +15,7 @@ records = []
 
 @blp.route("/record/<string:user_id>")
 class Record(MethodView):
+    @blp.response(200, RecordSchema(many=True))
     def get(self, user_id):
         try:
             user_records = [i for i in records if str(i["user_id"]) == user_id]
@@ -25,6 +26,7 @@ class Record(MethodView):
 
 @blp.route("/record")
 class RecordList(MethodView):
+    @blp.response(200, RecordSchema(many=True))
     def get(self):
         try:
             request_record = request.get_json()
@@ -36,6 +38,7 @@ class RecordList(MethodView):
         except KeyError:
             abort(404, message="Record in such category not found")
 
+    @blp.response(200, RecordSchema)
     @blp.arguments(RecordSchema)
     def post(self, request_record):
         try:
@@ -54,6 +57,6 @@ class RecordList(MethodView):
                 "amount": request_record["amount"]
             }
             records.append(new_record)
-            return records
+            return new_record
         except KeyError:
             abort(404, message="Cannot create record with these fields")
