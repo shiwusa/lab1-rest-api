@@ -6,6 +6,7 @@ from datetime import datetime
 
 from rest_api.resources.category import categories
 from rest_api.resources.user import users
+from rest_api.schemas import RecordSchema
 
 blp = Blueprint("record", __name__, description="Records operations")
 
@@ -23,21 +24,22 @@ class Record(MethodView):
 
 
 @blp.route("/record")
-class RacordList(MethodView):
+class RecordList(MethodView):
     def get(self):
         try:
             request_record = request.get_json()
             user_ = request_record["user_id"]
             category_ = request_record["category_id"]
-            user_records_cat = [i for i in records if str(i["user_id"]) == user_ and str(i["category_id"]) == category_]
+            user_records_cat = [i for i in records if str(i["user_id"]) == user_
+                                and str(i["category_id"]) == category_]
             return user_records_cat
         except KeyError:
             abort(404, message="Record in such category not found")
 
-    def post(self):
+    @blp.arguments(RecordSchema)
+    def post(self, request_record):
         try:
             record_id = uuid1.uuid1()
-            request_record = request.get_json()
             date = datetime.now()
             user_ = request_record["user_name"]
             category_ = request_record["category_title"]
@@ -55,4 +57,3 @@ class RacordList(MethodView):
             return records
         except KeyError:
             abort(404, message="Cannot create record with these fields")
-    

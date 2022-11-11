@@ -1,8 +1,8 @@
 from flask_smorest import Blueprint, abort
-from flask import request
 from flask.views import MethodView
 import uuid1
 
+from rest_api.schemas import UserSchema
 
 blp = Blueprint("user", __name__, description="User operations")
 
@@ -14,13 +14,15 @@ class UserList(MethodView):
     def get(self):
         return users
 
-    def post(self):
+    @blp.arguments(UserSchema)
+    def post(self, user_request):
         try:
+            if any(u["name"] == user_request["name"] for u in users):
+                abort(400, message="This name is already in use")
             user_id = uuid1.uuid1()
-            request_name = request.get_json()
             new_user = {
                 "id": user_id,
-                "name": request_name["name"]
+                "name": user_request["name"]
             }
             users.append(new_user)
             return users
