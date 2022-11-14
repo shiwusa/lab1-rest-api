@@ -5,7 +5,7 @@ from flask_smorest import Blueprint, abort
 from flask.views import MethodView
 
 from db import db
-from models import RecordModel
+from models import RecordModel, UserModel, CategoryModel
 
 from schemas import RecordSchema
 
@@ -16,7 +16,10 @@ blp = Blueprint("record", __name__, description="Records operations")
 class Record(MethodView):
     @blp.response(200, RecordSchema(many=True))
     def get(self, user_name):
-        record = RecordModel.query.filter(user_name == user_name)
+        record = RecordModel.query\
+            .join(RecordModel.user) \
+            .filter(UserModel.name == user_name)\
+            .all()
         return record
 
 
@@ -28,8 +31,11 @@ class RecordList(MethodView):
             request_record = request.get_json()
             user_name = request_record["user_name"]
             category_title = request_record["category_title"]
-            query = RecordModel.query.filter(user_name == user_name)
-            query = query.filter(category_title == category_title)
+            query = RecordModel.query \
+                .join(RecordModel.user) \
+                .join(RecordModel.category) \
+                .filter(UserModel.name == user_name) \
+                .filter(CategoryModel.title == category_title)
             return query.all()
         except IntegrityError:
             abort(400, message="Record in such category not found")
