@@ -8,3 +8,4 @@ class UserModel(db.Model):
     name = db.Column(db.String(64), unique=True, nullable=False)
 
     record = db.relationship("RecordModel", back_populates="user", lazy="dynamic")
+    category = db.relationship("CategoryModel", back_populates="user", lazy="dynamic")

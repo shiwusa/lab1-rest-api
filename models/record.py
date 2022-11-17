@@ -6,16 +6,16 @@ class RecordModel(db.Model):
     __tablename__ = "record"
 
     id = db.Column(db.Integer, primary_key=True)
-    title = db.Column(db.String(64), unique=True, nullable=False)
-    user_name = db.Column(
-        db.String(64),
-        db.ForeignKey("user.name"),
+    title = db.Column(db.String(64), nullable=False)
+    user_id = db.Column(
+        db.Integer,
+        db.ForeignKey("user.id"),
         unique=False,
         nullable=False
     )
-    category_title = db.Column(
-        db.String(64),
-        db.ForeignKey("category.title"),
+    category_id = db.Column(
+        db.Integer,
+        db.ForeignKey("category.id"),
         unique=False,
         nullable=False
     )

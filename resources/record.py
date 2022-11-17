@@ -12,13 +12,13 @@ from schemas import RecordSchema
 blp = Blueprint("record", __name__, description="Records operations")
 
 
-@blp.route("/record/<string:user_name>")
+@blp.route("/record/<string:user_id>")
 class Record(MethodView):
     @blp.response(200, RecordSchema(many=True))
-    def get(self, user_name):
-        record = RecordModel.query\
+    def get(self, user_id):
+        record = RecordModel.query \
             .join(RecordModel.user) \
-            .filter(UserModel.name == user_name)\
+            .filter(UserModel.id == user_id) \
             .all()
         return record
 
@@ -29,13 +29,13 @@ class RecordList(MethodView):
     def get(self):
         try:
             request_record = request.get_json()
-            user_name = request_record["user_name"]
-            category_title = request_record["category_title"]
+            user_id = request_record["user_id"]
+            category_id = request_record["category_id"]
             query = RecordModel.query \
                 .join(RecordModel.user) \
                 .join(RecordModel.category) \
-                .filter(UserModel.name == user_name) \
-                .filter(CategoryModel.title == category_title)
+                .filter(UserModel.id == user_id) \
+                .filter(CategoryModel.id == category_id)
             return query.all()
         except IntegrityError:
             abort(400, message="Record in such category not found")
@@ -45,8 +45,16 @@ class RecordList(MethodView):
     def post(self, request_record):
         record = RecordModel(**request_record)
         try:
-            db.session.add(record)
-            db.session.commit()
+            exist = CategoryModel.query \
+                .join(CategoryModel.user) \
+                .filter(CategoryModel.id == request_record["category_id"]) \
+                .filter(CategoryModel.owner_id == request_record["user_id"]) \
+
+            if len(exist.all()) > 0:
+                db.session.add(record)
+                db.session.commit()
+            else:
+                abort(400, message="No access to category")
         except IntegrityError:
             abort(400, message="Error while creating record")
         return record
