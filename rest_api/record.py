@@ -31,14 +31,15 @@ def create_record():
 
 @app.route("/getUserRecord")
 def get_user_record():
-    user_ = request.get_json()["user_id"]
+    user_ = request.args.get("user_id")
     user_records = [i for i in records if str(i["user_id"]) == user_]
     return jsonify(user_records)
 
 
 @app.route("/getUserRecordCategory")
 def get_user_record_cat():
-    user_ = request.get_json()["user_id"]
-    category_ = request.get_json()["category_id"]
-    user_records_cat = [i for i in records if str(i["user_id"]) == user_ and str(i["category_id"]) == category_]
+    user_ = request.args.get("user_id")
+    category_ = request.args.get("category_id")
+    user_records_cat = [i for i in records if str(i["user_id"]) == user_
+                        and str(i["category_id"]) == category_]
     return jsonify(user_records_cat)
