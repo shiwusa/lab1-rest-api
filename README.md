@@ -2,11 +2,10 @@
 
 ---
 ### Variant: <em>custom private categories</em>
-    `11 mod 3 = 2`
+    11 mod 3 = 2
 ## Installation
 1. `cd /project_directory`
-2. `python -m pip instal --user virtualenvl`
-3. `docker-compose up -d`
+2. `docker-compose up -d`
 
 ---
 ## Deployment 
@@ -21,7 +20,7 @@ using existing docker file
 `GET methods`:
 - `/user` - get all users
 - `/record/user_id` - get user`s records by id
-- `/record` - get record in category
+- `/record/user_id&category_id` - get record in category
 - `/category` - get all public categories
 - `/category/owner_id` - get private categories
 

@@ -28,9 +28,9 @@ class RecordList(MethodView):
     @blp.response(200, RecordSchema(many=True))
     def get(self):
         try:
-            request_record = request.get_json()
-            user_id = request_record["user_id"]
-            category_id = request_record["category_id"]
+            request_record = request.args
+            user_id = request_record.get("user_id")
+            category_id = request_record.get("category_id")
             query = RecordModel.query \
                 .join(RecordModel.user) \
                 .join(RecordModel.category) \
@@ -47,7 +47,7 @@ class RecordList(MethodView):
         try:
             exist = CategoryModel.query \
                 .join(CategoryModel.user) \
-                .filter(CategoryModel.id == request_record["category_id"]) \
+                .filter(CategoryModel.id == request_record.get["category_id"]) \
                 .filter(CategoryModel.owner_id == request_record["user_id"]) \
 
             if len(exist.all()) > 0:
