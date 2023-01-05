@@ -1,8 +1,7 @@
-# Laboratory work 2
+# Laboratory work 3
 
 ---
-### Variant: <em>custom private categories</em>
-    11 mod 3 = 2
+
 ## Installation
 1. `cd /project_directory`
 2. `docker-compose up -d`
@@ -12,8 +11,9 @@
 - [v1.0.0](https://github.com/shiwusa/lab1-rest-api/releases/tag/v1.0.0) 
 on [Heroku](https://lab1-rest-api.herokuapp.com/)
 using GitHub actions
-- current version on [Render](https://rest-api-7355.onrender.com) (as web service)
+- [v2.0.0](https://github.com/shiwusa/lab1-rest-api/tree/v2.0.0) on [Render](https://rest-api-7355.onrender.com) (as web service)
 using existing docker file
+- [v3.0.0](https://github.com/shiwusa/lab1-rest-api/tree/v3.0.0) on [Render](https://lab3-back.onrender.com)
 
 ---
 ## Endpoints
@@ -25,7 +25,8 @@ using existing docker file
 - `/category/owner_id` - get private categories
 
 `POST methods`:
-- `/user` - create new user
+- `/user` - register
+- `/login` - login
 - `/record` - create new record in category
 - `/category` - create public category.
 If `private: true` and `owner_id: ` are defined in request:
