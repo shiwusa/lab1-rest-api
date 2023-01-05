@@ -1,4 +1,5 @@
 from flask import request
+from flask_jwt_extended import jwt_required
 from sqlalchemy.exc import IntegrityError
 from flask_smorest import Blueprint, abort
 
@@ -14,6 +15,7 @@ blp = Blueprint("record", __name__, description="Records operations")
 
 @blp.route("/record/<string:user_id>")
 class Record(MethodView):
+    @jwt_required()
     @blp.response(200, RecordSchema(many=True))
     def get(self, user_id):
         record = RecordModel.query \
@@ -25,6 +27,7 @@ class Record(MethodView):
 
 @blp.route("/record")
 class RecordList(MethodView):
+    @jwt_required()
     @blp.response(200, RecordSchema(many=True))
     def get(self):
         try:
@@ -40,6 +43,7 @@ class RecordList(MethodView):
         except IntegrityError:
             abort(400, message="Record in such category not found")
 
+    @jwt_required()
     @blp.arguments(RecordSchema)
     @blp.response(200, RecordSchema)
     def post(self, request_record):
@@ -47,7 +51,7 @@ class RecordList(MethodView):
         try:
             exist = CategoryModel.query \
                 .join(CategoryModel.user) \
-                .filter(CategoryModel.id == request_record.get["category_id"]) \
+                .filter(CategoryModel.id == request_record["category_id"]) \
                 .filter(CategoryModel.owner_id == request_record["user_id"]) \
 
             if len(exist.all()) > 0:

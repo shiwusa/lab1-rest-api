@@ -1,3 +1,4 @@
+from flask_jwt_extended import jwt_required
 from sqlalchemy.exc import IntegrityError
 from flask_smorest import Blueprint, abort
 from flask.views import MethodView
@@ -11,6 +12,7 @@ blp = Blueprint("category", __name__, description="Category operations")
 
 @blp.route("/category/<string:owner_id>")
 class CategoryPrivate(MethodView):
+    @jwt_required()
     @blp.response(200, CategorySchema(many=True))
     def get(self, owner_id):
         try:
@@ -29,6 +31,7 @@ class CategoryList(MethodView):
         return CategoryModel.query \
             .filter(CategoryModel.private == 0).all()
 
+    @jwt_required()
     @blp.arguments(CategorySchema)
     @blp.response(200, CategorySchema)
     def post(self, request_title):
